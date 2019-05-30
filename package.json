@@ -1,0 +1,22 @@
+{
+  "name": "fishbowl-launcher",
+  "version": "1.0.0",
+  "description": "Easily switch between country versions when launching Fishbowl",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BrennenRocks/fishbowl-launcher.git"
+  },
+  "author": "Brennen Davis",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BrennenRocks/fishbowl-launcher/issues"
+  },
+  "homepage": "https://github.com/BrennenRocks/fishbowl-launcher#readme",
+  "dependencies": {
+    "yargs": "^13.2.4"
+  }
+}
