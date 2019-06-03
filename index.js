@@ -8,6 +8,10 @@ const sleep = (ms) => {
 }
 
 const editEveProperties = async (path, country, dbname) => {
+  if (path == undefined) {
+    return;
+  }
+
   let data = readFileSync(path, 'utf-8');
   if (data.includes('country=')) {
     data = data.replace(/country=(\w+)/, `country=${country}`);
@@ -26,8 +30,14 @@ const editEveProperties = async (path, country, dbname) => {
 
 require('yargs')
     .scriptName('index.js')
-    .usage('$0 [args]')
-    .command('$0 [specific] [country] [dbname]', '', (yargs) => {
+    .check(argv => {
+      if (argv.specific == undefined) {
+        throw(new Error('The \'specific\' argument is required'));
+      }
+
+      return true;
+    })
+    .command('$0 [specific] [country] [dbname]', 'launch client and server for the specified country and dbname', (yargs) => {
       yargs.positional('specific', {
         type: 'string',
         describe: 'file path to the fishbowl install'
@@ -68,6 +78,15 @@ require('yargs')
     }, (argv) => {
       const serverPath = join(argv.specific, 'server', 'bin', 'debug-eve.bat');
       exec('start ' + serverPath, {cwd: join(argv.specific, 'server', 'bin')});
+    })
+    .command('checkout [specific]', 'launch Checkout', (yargs) => {
+      yargs.positional('specific', {
+        type: 'string',
+        describe: 'file path to the fishbowl install'
+      })
+    }, (argv) => {
+      const checkoutPath = join(argv.specific, 'client', 'bin', 'Checkout.bat');
+      exec('start ' + checkoutPath, {cwd: join(argv.specific, 'client', 'bin')});
     })
     .help()
     .argv
