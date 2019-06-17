@@ -7,7 +7,7 @@ const sleep = (ms) => {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-const editEveProperties = async (path, country, dbname) => {
+const editEveProperties = (path, country, dbname) => {
   if (path == undefined) {
     return;
   }
@@ -24,69 +24,69 @@ const editEveProperties = async (path, country, dbname) => {
   } else {
     data += `${EOL}dbName=${dbname}`;
   }
-  
+
   writeFileSync(path, data, 'utf-8');
 }
 
 require('yargs')
-    .scriptName('index.js')
-    .check(argv => {
-      if (argv.specific == undefined) {
-        throw(new Error('The \'specific\' argument is required'));
-      }
+  .scriptName('index.js')
+  .check(argv => {
+    if (argv.specific == undefined) {
+      throw (new Error('The \'specific\' argument is required'));
+    }
 
-      return true;
+    return true;
+  })
+  .command('$0 [specific] [country] [dbname]', 'launch client and server for the specified country and dbname', (yargs) => {
+    yargs.positional('specific', {
+      type: 'string',
+      describe: 'file path to the fishbowl install'
+    }).positional('country', {
+      type: 'string',
+      default: 'US',
+      describe: 'country version: AU, CA, or US'
+    }).positional('dbname', {
+      type: 'string',
+      default: 'demous',
+      describe: 'database name'
     })
-    .command('$0 [specific] [country] [dbname]', 'launch client and server for the specified country and dbname', (yargs) => {
-      yargs.positional('specific', {
-        type: 'string',
-        describe: 'file path to the fishbowl install'
-      }).positional('country', {
-        type: 'string',
-        default: 'US',
-        describe: 'country version: AU, CA, or US'
-      }).positional('dbname', {
-        type: 'string',
-        default: 'demous',
-        describe: 'database name'
-      })
-    }, async (argv) => {
-      editEveProperties(join(argv.specific, 'server', 'bin', 'eve.properties'), argv.country, argv.dbname);
+  }, async (argv) => {
+    editEveProperties(join(argv.specific, 'server', 'bin', 'eve.properties'), argv.country, argv.dbname);
 
-      const serverPath = join(argv.specific, 'server', 'bin', 'debug-eve.bat');
-      const clientPath = join(argv.specific, 'client', 'bin', 'debug-client.bat');
-      exec('start ' + serverPath, {cwd: join(argv.specific, 'server', 'bin')});
+    const serverPath = join(argv.specific, 'server', 'bin', 'debug-eve.bat');
+    const clientPath = join(argv.specific, 'client', 'bin', 'debug-client.bat');
+    exec('start ' + serverPath, { cwd: join(argv.specific, 'server', 'bin') });
 
-      await sleep(6000);
+    await sleep(6000);
 
-      exec('start ' + clientPath, {cwd: join(argv.specific, 'client', 'bin')});
+    exec('start ' + clientPath, { cwd: join(argv.specific, 'client', 'bin') });
+  })
+  .command('client [specific]', 'launch the client', (yargs) => {
+    yargs.positional('specific', {
+      type: 'string',
+      describe: 'file path to the fishbowl install'
     })
-    .command('client [specific]', 'launch the client', (yargs) => {
-      yargs.positional('specific', {
-        type: 'string',
-        describe: 'file path to the fishbowl install'
-      })
-    }, (argv) => {
-      const clientPath = join(argv.specific, 'client', 'bin', 'debug-client.bat');
-      exec('start ' + clientPath, {cwd: join(argv.specific, 'client', 'bin')});
+  }, (argv) => {
+    const clientPath = join(argv.specific, 'client', 'bin', 'debug-client.bat');
+    exec('start ' + clientPath, { cwd: join(argv.specific, 'client', 'bin') });
+  })
+  .command('server [specific]', 'launch the server using the country already in eve.properties', (yargs) => {
+    yargs.positional('specific', {
+      type: 'string',
+      describe: 'file path to the fishbowl install'
     })
-    .command('server [specific]', 'launch the server using the country already in eve.properties', (yargs) => {
-      yargs.positional('specific', {
-        type: 'string',
-        describe: 'file path to the fishbowl install'
-      })
-    }, (argv) => {
-      const serverPath = join(argv.specific, 'server', 'bin', 'debug-eve.bat');
-      exec('start ' + serverPath, {cwd: join(argv.specific, 'server', 'bin')});
+  }, (argv) => {
+    const serverPath = join(argv.specific, 'server', 'bin', 'debug-eve.bat');
+    exec('start ' + serverPath, { cwd: join(argv.specific, 'server', 'bin') });
+  })
+  .command('checkout [specific]', 'launch Checkout', (yargs) => {
+    yargs.positional('specific', {
+      type: 'string',
+      describe: 'file path to the fishbowl install'
     })
-    .command('checkout [specific]', 'launch Checkout', (yargs) => {
-      yargs.positional('specific', {
-        type: 'string',
-        describe: 'file path to the fishbowl install'
-      })
-    }, (argv) => {
-      const checkoutPath = join(argv.specific, 'client', 'bin', 'Checkout.bat');
-      exec('start ' + checkoutPath, {cwd: join(argv.specific, 'client', 'bin')});
-    })
-    .help()
-    .argv
+  }, (argv) => {
+    const checkoutPath = join(argv.specific, 'client', 'bin', 'Checkout.bat');
+    exec('start ' + checkoutPath, { cwd: join(argv.specific, 'client', 'bin') });
+  })
+  .help()
+  .argv
