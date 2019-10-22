@@ -57,7 +57,7 @@ require('yargs')
     const clientPath = join(argv.specific, 'client', 'bin', 'debug-client.bat');
     exec('start ' + serverPath, { cwd: join(argv.specific, 'server', 'bin') });
 
-    await sleep(6000);
+    await sleep(7000);
 
     exec('start ' + clientPath, { cwd: join(argv.specific, 'client', 'bin') });
   })
