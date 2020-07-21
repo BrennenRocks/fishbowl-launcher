@@ -76,7 +76,7 @@ require('yargs')
       describe: 'file path to the fishbowl install'
     })
   }, (argv) => {
-    const checkoutPath = join(argv.specific, 'client', 'bin', 'Checkout.bat');
+    const checkoutPath = join(argv.specific, 'client', 'bin', 'debug-Checkout.bat');
     exec('start ' + checkoutPath, { cwd: join(argv.specific, 'client', 'bin') });
   })
   .help()
